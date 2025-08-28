@@ -1,26 +1,23 @@
 ---
-- name: Setup httpd and open firewall port
+- name: Setup apache and open firewall port
   hosts: web
-  become: true   
+  become: true
   tasks:
     - name: Install apache packages
       apt:
-        name: httpd
+        name: apache2
         state: present
+        update_cache: yes
 
-    - name: Start httpd
+    - name: Ensure apache is running
       service:
-        name: httpd
+        name: apache2
         state: started
+        enabled: yes
 
-    - name: Open port 80 for http access
-      firewalld:
-        service: http
-        permanent: true
-        state: enabled
-
-    - name: Restart firewalld service to load firewall changes
-      service:
-        name: firewalld
-        state: reloaded
+    - name: Allow port 80 through UFW
+      ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
 
