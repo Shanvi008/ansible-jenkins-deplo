@@ -1,0 +1,40 @@
+---
+- hosts: ubuntu
+  become: yes
+  tasks:
+    - name: Install nginx on Ubuntu
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Copy ubuntu file
+      copy:
+        src: ubuntu.txt
+        dest: /home/ubuntu/ubuntu.txt
+        owner: ubuntu
+        group: ubuntu
+        mode: 0644
+
+
+- hosts: amazon
+  become: yes
+  tasks:
+    - name: Update all packages on Amazon Linux
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Install httpd on Amazon Linux
+      yum:
+        name: httpd
+        state: present
+
+    - name: Copy amazon file
+      copy:
+        src: amazon.txt
+        dest: /home/ec2-user/amazon.txt
+        owner: ec2-user
+        group: ec2-user
+        mode: 0644
+
